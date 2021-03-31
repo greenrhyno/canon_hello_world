@@ -1,0 +1,17 @@
+name: learn-github-actions
+on:
+  push:
+    branches:
+      - main
+      - github_actions
+  pull_request:
+    branches:
+      - main
+jobs:
+  check-node-version:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+      - run: node -v
+      - run: npm -v
