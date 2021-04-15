@@ -3,6 +3,7 @@ on:
   push:
     branches:
       - main
+      - github_actions
   pull_request:
     branches:
       - main
@@ -34,8 +35,16 @@ jobs:
     name: Deploy
     runs-on: ubuntu-latest
     steps:
+      - name: Setup Google Cloud SDK
+        uses: google-github-actions/setup-gcloud@master
+        with:
+          project_id: ${{ secrets.GCP_PROJECT_ID }}
+          service_account_key: ${{ secrets.GCP_SA_KEY }}
+          export_default_credentials: true
       - name: Download Build Assets
         uses: actions/download-artifact@v2
         with:
           name: build-assets
+      - name: Upload Assets to VM
+        run: gcloud compute scp --recurse build-assets ${{ secrets.GCP_VM_NAME }}:/home/ryan
 
